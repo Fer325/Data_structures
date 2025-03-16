@@ -1,0 +1,54 @@
+#include <iostream>
+#include <tuple>
+
+using namespace std;
+
+// Функция для вычисления расширенного алгоритма Евклида
+tuple<long long, long long, long long> extended_gcd(long long a, long long b) {
+    if (a == 0) {
+        return make_tuple(b, 0, 1);
+    } else {
+        long long gcd, x1, y1;
+        tie(gcd, x1, y1) = extended_gcd(b % a, a);
+        long long x = y1 - (b / a) * x1;
+        long long y = x1;
+        return make_tuple(gcd, x, y);
+    }
+}
+
+// Функция для вычисления мультипликативного обратного
+long long mod_inverse(long long a, long long m) {
+    long long gcd, x, y;
+    tie(gcd, x, y) = extended_gcd(a, m);
+    if (gcd != 1) {
+        return 0;  // Обратного элемента не существует
+    } else {
+        return (x % m + m) % m;  // Гарантируем, что результат положительный
+    }
+}
+
+int main() {
+    cout << "Мещанинов Богдан Павлович, 090304-РПИа-о24" << endl;
+
+    while (true) {
+        try {
+            long long a, n;
+            cout << "Введите два целых числа (a n): ";
+            cin >> a >> n;
+
+            if (!(0 < a && a < 1000000000 && 0 < n && n < 1000000000)) {
+                cout << "Ошибка: a и n должны быть в диапазоне (0, 10^9). Повторите ввод." << endl;
+                continue;  // Переходим к следующей итерации цикла
+            }
+            
+            long long result = mod_inverse(a, n);
+            cout << result << endl;
+            break;
+        } catch (...) { // Ловим любые исключения
+            cout << "Ошибка: Введите два целых числа, разделенных пробелом. Повторите ввод." << endl;
+        }
+    }
+
+    return 0;
+}
+
